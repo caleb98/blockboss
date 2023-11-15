@@ -1,0 +1,11 @@
+plugins {
+  id 'net.calebscode.blockboss.java-application-conventions'
+}
+
+dependencies {
+  implementation project(":blockboss-lib")
+}
+
+application {
+  mainClass = 'net.calebscode.blockboss.BlockBossClient'
+}

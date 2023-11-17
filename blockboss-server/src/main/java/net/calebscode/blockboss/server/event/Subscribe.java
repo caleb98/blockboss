@@ -1,4 +1,4 @@
-package net.calebscode.blockboss.server;
+package net.calebscode.blockboss.server.event;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

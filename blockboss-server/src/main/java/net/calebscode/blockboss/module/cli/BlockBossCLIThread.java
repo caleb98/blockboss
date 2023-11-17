@@ -48,6 +48,9 @@ public class BlockBossCLIThread extends BlockBossModuleThread {
 			break;
 			
 		case "exit":
+			if (blockBoss.getMinecraftServer().isRunning()) {
+				blockBoss.getMinecraftServer().sendInput("stop");
+			}
 			blockBoss.shutdown();
 			break;
 		

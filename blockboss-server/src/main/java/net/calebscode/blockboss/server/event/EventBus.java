@@ -1,4 +1,4 @@
-package net.calebscode.blockboss.server;
+package net.calebscode.blockboss.server.event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,11 +10,11 @@ import java.util.Map;
 
 import net.calebscode.blockboss.logging.Logging;
 
-public class MessageBus implements Logging {
+public class EventBus implements Logging {
 	
 	private Map<Class<?>, List<SubscriberMethod>> subscriptions;
 	
-	public MessageBus() {
+	public EventBus() {
 		subscriptions = new HashMap<>();
 	}
 	

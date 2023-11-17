@@ -68,7 +68,7 @@ public class MinecraftServer implements Logging {
 		stdin = new BufferedWriter(new OutputStreamWriter(stdinStream));
 
 		logger().info("Creating Minecraft-Process-Stream-Monitor thread.");
-		new Thread(this::monitorProcessStreams, "Minecraft-Process-Stream-Monitor").start();
+		new Thread(this::monitorProcessStreams, "Server").start();
 	}
 	
 	private void monitorProcessStreams() {

@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.calebscode.blockboss.logging.Logging;
 import net.calebscode.blockboss.module.BlockBossModule;
+import net.calebscode.blockboss.server.event.EventBus;
+import net.calebscode.blockboss.server.event.MinecraftServerProcessStartedEvent;
 import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public class BlockBossServer implements Logging {
@@ -16,16 +18,16 @@ public class BlockBossServer implements Logging {
 	private ArrayList<BlockBossModule> modules = new ArrayList<>();
 	private boolean isShutdownRequested = false;
 	
-	private Thread messageProcessingThread;
-	private MessageBus messageBus = new MessageBus();
-	private Queue<Object> pendingMessages = new ConcurrentLinkedQueue<>();
+	private Thread eventProcessingThread;
+	private EventBus eventBus = new EventBus();
+	private Queue<Object> pendingEvents = new ConcurrentLinkedQueue<>();
 
 	public BlockBossServer(String serverDirectory, String... serverCommand) {
 		minecraftServer = new MinecraftServer(new File(serverDirectory), serverCommand);
 	}
 
 	public boolean addModule(BlockBossModule module) {
-		messageBus.register(module);
+		eventBus.register(module);
 		return modules.add(module);
 	}
 	
@@ -34,8 +36,8 @@ public class BlockBossServer implements Logging {
 			module.init();
 		}
 		
-		messageProcessingThread = new Thread(new MessageProcessingThread(), "BlockBoss-MPT");
-		messageProcessingThread.start();
+		eventProcessingThread = new Thread(new EventProcessingThread(), "Events");
+		eventProcessingThread.start();
 	}
 	
 	public void start() throws IOException {
@@ -46,6 +48,7 @@ public class BlockBossServer implements Logging {
 		}
 		
 		minecraftServer.start();
+		sendEvent(new MinecraftServerProcessStartedEvent());
 	}
 	
 	public void shutdown() {
@@ -60,18 +63,18 @@ public class BlockBossServer implements Logging {
 		return minecraftServer;
 	}
 	
-	public void sendMessage(Object message) {
-		pendingMessages.add(message);
+	public void sendEvent(Object message) {
+		pendingEvents.add(message);
 	}
 	
-	private class MessageProcessingThread implements Runnable {
+	private class EventProcessingThread implements Runnable {
 		@Override
 		public void run() {
 			logger().info("Starting {}", Thread.currentThread().getName());
 			while (!isShutdownRequested && !Thread.interrupted()) {
 				Object message;
-				while ((message = pendingMessages.poll()) != null) {
-					messageBus.send(message);
+				while ((message = pendingEvents.poll()) != null) {
+					eventBus.send(message);
 				}
 			}
 			logger().info("Exiting {}", Thread.currentThread().getName());

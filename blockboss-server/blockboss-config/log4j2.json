@@ -6,7 +6,7 @@
             "Console": {
                 "name": "STDOUT",
                 "PatternLayout": {
-                    "pattern": "[%d{HH:mm:ss}] [BlockBoss.%t] %level: %m%n"
+                    "pattern": "[%d{HH:mm:ss}] [BlockBoss.%t-%c{1}/%level]: %m%n"
                 }
             }
         },

@@ -3,7 +3,7 @@ package net.calebscode.blockboss.module.cli;
 import net.calebscode.blockboss.module.BlockBossModule;
 import net.calebscode.blockboss.module.event.PlayerJoinedEvent;
 import net.calebscode.blockboss.server.BlockBossServer;
-import net.calebscode.blockboss.server.Subscribe;
+import net.calebscode.blockboss.server.event.Subscribe;
 import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public class BlockBossCLIModule extends BlockBossModule {
@@ -16,7 +16,7 @@ public class BlockBossCLIModule extends BlockBossModule {
 	
 	@Override
 	public void init() {
-		blockBossCLIThread = new Thread(new BlockBossCLIThread(blockBoss, this), "BlockBoss-CLI");
+		blockBossCLIThread = new Thread(new BlockBossCLIThread(blockBoss, this), "CLI");
 		blockBossCLIThread.start();
 	}
 	
@@ -24,11 +24,6 @@ public class BlockBossCLIModule extends BlockBossModule {
 	public void configure(MinecraftServer process) {
 		process.addStdoutListener(System.out::println);
 		process.addStderrListener(System.err::println);
-	}
-
-	@Subscribe
-	public void testSubscribe(PlayerJoinedEvent event) {
-		logger().info("Received event telling me that {} joined!", event.playerName);
 	}
 	
 }

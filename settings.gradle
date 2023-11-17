@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'blockboss'
-include('blockboss-lib', 'blockboss-server', 'blockboss-client')
+include ':blockboss-lib', ':blockboss-server', ':blockboss-client'

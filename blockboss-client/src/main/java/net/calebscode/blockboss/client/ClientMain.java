@@ -1,6 +1,6 @@
-package net.calebscode.blockboss;
+package net.calebscode.blockboss.client;
 
-public class BlockBossClient {
+public class ClientMain {
 
 	public static void main(String[] args) {
 		System.out.println("BlockBossServer.");

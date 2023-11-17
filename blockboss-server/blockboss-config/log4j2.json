@@ -1,0 +1,22 @@
+{
+    "configuration": {
+        "status": "error",
+        "name": "BlockBossLoggingConfig",
+        "appenders": {
+            "Console": {
+                "name": "STDOUT",
+                "PatternLayout": {
+                    "pattern": "[%d{HH:mm:ss}] [BlockBoss.%t] %level: %m%n"
+                }
+            }
+        },
+        "loggers": {
+            "root": {
+                "level": "DEBUG",
+                "AppenderRef": {
+                    "ref": "STDOUT"
+                }
+            }
+        }
+    }
+}

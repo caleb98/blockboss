@@ -1,6 +1,8 @@
 package net.calebscode.blockboss.module.event;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.regex.Matcher;
 
 import net.calebscode.blockboss.module.BlockBossModule;
@@ -32,6 +34,11 @@ public class ServerEventModule extends BlockBossModule {
 		eventDefinitions.add(new WorldSavedEventDefinition());
 	}
 
+	@Override
+	public Collection<Class<? extends BlockBossModule>> getDependencies() {
+		return Collections.emptyList();
+	}
+	
 	@Override
 	public void init() {
 

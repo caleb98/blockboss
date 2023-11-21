@@ -2,9 +2,10 @@ package net.calebscode.blockboss.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
 
 import net.calebscode.blockboss.logging.Logging;
 import net.calebscode.blockboss.module.BlockBossModule;
@@ -15,7 +16,7 @@ import net.calebscode.blockboss.server.event.MinecraftServerProcessStartedEvent;
 public class BlockBossServer implements Logging {
 
 	private MinecraftServer minecraftServer;
-	private ArrayList<BlockBossModule> modules = new ArrayList<>();
+	private HashMap<Class<?>, BlockBossModule> modules = new HashMap<>();
 	private boolean isShutdownRequested = false;
 
 	private Thread eventProcessingThread;
@@ -26,33 +27,38 @@ public class BlockBossServer implements Logging {
 		minecraftServer = new MinecraftServer(serverJar);
 	}
 
-	public boolean addModule(BlockBossModule module) {
+	public void addModule(BlockBossModule module) {
+		var moduleClass = module.getClass();
+		if (modules.containsKey(moduleClass)) {
+			throw new IllegalArgumentException(String.format("Module of type %s has already been added.", moduleClass));
+		}
+
 		eventBus.register(module);
-		return modules.add(module);
+		modules.put(moduleClass, module);
 	}
 
 	public void init() {
-		for (var module : modules) {
+		eventProcessingThread = new Thread(new EventProcessingThread(), "Events");
+		eventProcessingThread.start();
+
+		for (var module : modules.values()) {
 			module.init();
 		}
 
-		eventProcessingThread = new Thread(new EventProcessingThread(), "Events");
-		eventProcessingThread.start();
+		for (var module : modules.values()) {
+			module.configure(minecraftServer);
+		}
 	}
 
 	public void start() throws IOException {
 		isShutdownRequested = false;
-
-		for (var module : modules) {
-			module.configure(minecraftServer);
-		}
-
 		minecraftServer.start();
 		sendEvent(new MinecraftServerProcessStartedEvent());
 	}
 
 	public void shutdown() {
 		isShutdownRequested = true;
+		eventProcessingThread.interrupt();
 	}
 
 	public boolean isShutdownRequested() {
@@ -63,8 +69,28 @@ public class BlockBossServer implements Logging {
 		return minecraftServer;
 	}
 
+	public <T> void addEventListener(Class<T> clazz, Function<T, Boolean> listener) {
+		eventBus.addListener(clazz, listener);
+	}
+
 	public void sendEvent(Object message) {
-		pendingEvents.add(message);
+		synchronized (pendingEvents) {
+			pendingEvents.add(message);
+			pendingEvents.notifyAll();
+		}
+	}
+
+	public boolean isModulePresent(Class<?> moduleType) {
+		return modules.containsKey(moduleType);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends BlockBossModule> T getModule(Class<T> moduleType) {
+		if (!modules.containsKey(moduleType)) {
+			return null;
+		}
+
+		return (T) modules.get(moduleType);
 	}
 
 	private class EventProcessingThread implements Runnable {
@@ -72,9 +98,17 @@ public class BlockBossServer implements Logging {
 		public void run() {
 			logger().info("Starting {}", Thread.currentThread().getName());
 			while (!isShutdownRequested && !Thread.interrupted()) {
-				Object message;
-				while ((message = pendingEvents.poll()) != null) {
-					eventBus.send(message);
+				synchronized (pendingEvents) {
+					try {
+						pendingEvents.wait();
+						Object message;
+						while ((message = pendingEvents.poll()) != null) {
+							System.out.println(message.getClass());
+							eventBus.send(message);
+						}
+					} catch (InterruptedException e) {
+						break;
+					}
 				}
 			}
 			logger().info("Exiting {}", Thread.currentThread().getName());

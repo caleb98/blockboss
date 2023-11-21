@@ -19,6 +19,12 @@ public class BlockBossModuleThread implements Runnable, Logging {
 		init();
 		while (!blockBoss.isShutdownRequested()) {
 			doUpdate();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException ex) {
+				logger().info("{} Thread interrupted: {}", Thread.currentThread().getName(), ex.getMessage());
+				break;
+			}
 		}
 		cleanup();
 		logger().info("Exiting {}", Thread.currentThread().getName());

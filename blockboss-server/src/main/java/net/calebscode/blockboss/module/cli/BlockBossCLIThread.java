@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import net.calebscode.blockboss.module.BlockBossModule;
 import net.calebscode.blockboss.module.BlockBossModuleThread;
+import net.calebscode.blockboss.module.exec.ExecModule;
+import net.calebscode.blockboss.module.exec.executor.RootExecutor;
 import net.calebscode.blockboss.server.BlockBossServer;
 
 public class BlockBossCLIThread extends BlockBossModuleThread {
@@ -22,16 +24,22 @@ public class BlockBossCLIThread extends BlockBossModuleThread {
 			String line = input.nextLine();
 
 			if (line.startsWith("bb ")) {
-				line = handleBlockBossCommand(line);
+				handleBlockBossCommand(line.substring(3));
 			} else if (blockBoss.getMinecraftServer().isRunning()) {
 				blockBoss.getMinecraftServer().sendInput(line);
 			}
 		}
 	}
 
-	private String handleBlockBossCommand(String blockBossCommand) {
-		blockBossCommand = blockBossCommand.substring(3);
-		switch (blockBossCommand) {
+	private void handleBlockBossCommand(String blockBossCommand) {
+		var fullCommand = blockBossCommand.split(" ");
+
+		if (fullCommand.length == 0) {
+			System.out.println("Please provide a command to run.");
+			return;
+		}
+
+		switch (fullCommand[0]) {
 
 		case "serve":
 			if (!blockBoss.getMinecraftServer().isRunning()) {
@@ -52,12 +60,26 @@ public class BlockBossCLIThread extends BlockBossModuleThread {
 			blockBoss.shutdown();
 			break;
 
+		case "action":
+			if (fullCommand.length != 2) {
+				System.out.println("Usage: bb action [actionId]");
+				return;
+			}
+
+			if (!blockBoss.isModulePresent(ExecModule.class)) {
+				System.out.println("That command requires the ExecModule to be present.");
+				return;
+			}
+
+			var execModule = blockBoss.getModule(ExecModule.class);
+			execModule.attemptExecute(RootExecutor.ROOT_EXECUTOR, fullCommand[1]);
+			break;
+
 		default:
 			System.out.printf("Unrecognized BlockBoss command: %s\n", blockBossCommand);
 			break;
 
 		}
-		return blockBossCommand;
 	}
 
 }

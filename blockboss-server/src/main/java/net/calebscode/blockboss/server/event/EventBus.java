@@ -7,21 +7,53 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import net.calebscode.blockboss.logging.Logging;
 
 public class EventBus implements Logging {
 
 	private Map<Class<?>, List<SubscriberMethod>> subscriptions;
+	private Map<Class<?>, List<Function<?, Boolean>>> listeners;
 
 	public EventBus() {
 		subscriptions = new HashMap<>();
+		listeners = new HashMap<>();
 	}
 
-	public void send(Object data) {
+	@SuppressWarnings("unchecked")
+	public <T> void send(T data) {
 		Class<?> dataClass = data.getClass();
 		if (subscriptions.containsKey(dataClass)) {
 			subscriptions.get(dataClass).forEach(subscription -> subscription.call(data));
+		}
+
+		if (listeners.containsKey(dataClass)) {
+			synchronized (listeners) {
+				var dataListeners = listeners.get(dataClass);
+				var iter = dataListeners.iterator();
+
+				while (iter.hasNext()) {
+					var listener = (Function<T, Boolean>) iter.next();
+					if (listener.apply(data)) {
+						iter.remove();
+					}
+				}
+
+				if (dataListeners.size() == 0) {
+					listeners.remove(dataClass);
+				}
+			}
+		}
+	}
+
+	public <T> void addListener(Class<T> clazz, Function<T, Boolean> listener) {
+		synchronized (listeners) {
+			if (!listeners.containsKey(clazz)) {
+				listeners.put(clazz, new ArrayList<>());
+			}
+
+			listeners.get(clazz).add(listener);
 		}
 	}
 

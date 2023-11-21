@@ -13,6 +13,7 @@ import org.apache.commons.cli.ParseException;
 import net.calebscode.blockboss.logging.BlockBossLoggingConfigurer;
 import net.calebscode.blockboss.module.cli.BlockBossCLIModule;
 import net.calebscode.blockboss.module.event.ServerEventModule;
+import net.calebscode.blockboss.module.exec.ExecModule;
 
 public class ServerMain {
 
@@ -38,6 +39,7 @@ public class ServerMain {
 		BlockBossServer server = new BlockBossServer(new File(serverJar));
 		server.addModule(new BlockBossCLIModule(server));
 		server.addModule(new ServerEventModule(server));
+		server.addModule(new ExecModule(server));
 
 		server.init();
 	}

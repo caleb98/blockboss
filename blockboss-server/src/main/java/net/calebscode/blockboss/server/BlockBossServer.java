@@ -17,6 +17,7 @@ public class BlockBossServer implements Logging {
 
 	private MinecraftServer minecraftServer;
 	private HashMap<Class<?>, BlockBossModule> modules = new HashMap<>();
+	private boolean isInitialized = false;
 	private boolean isShutdownRequested = false;
 
 	private Thread eventProcessingThread;
@@ -38,15 +39,25 @@ public class BlockBossServer implements Logging {
 	}
 
 	public void init() {
+		if (isInitialized) {
+			throw new IllegalStateException("BlockBossServer is already initialized.");
+		}
+
 		eventProcessingThread = new Thread(new EventProcessingThread(), "Events");
 		eventProcessingThread.start();
 
 		for (var module : modules.values()) {
 			module.init(minecraftServer);
 		}
+
+		isInitialized = true;
 	}
 
 	public void start() throws IOException {
+		if (minecraftServer.isRunning()) {
+			throw new IllegalStateException("Minecraft server is already running.");
+		}
+
 		isShutdownRequested = false;
 		minecraftServer.start();
 		sendEvent(new MinecraftServerProcessStartedEvent());
@@ -99,7 +110,6 @@ public class BlockBossServer implements Logging {
 						pendingEvents.wait();
 						Object message;
 						while ((message = pendingEvents.poll()) != null) {
-							System.out.println(message.getClass());
 							eventBus.send(message);
 						}
 					} catch (InterruptedException e) {

@@ -12,6 +12,7 @@ import net.calebscode.blockboss.module.BlockBossModule;
 import net.calebscode.blockboss.process.MinecraftServer;
 import net.calebscode.blockboss.server.event.EventBus;
 import net.calebscode.blockboss.server.event.MinecraftServerProcessStartedEvent;
+import net.calebscode.blockboss.test.VisibleForTesting;
 
 public class BlockBossServer implements Logging {
 
@@ -119,6 +120,11 @@ public class BlockBossServer implements Logging {
 			}
 			logger().info("Exiting {}", Thread.currentThread().getName());
 		}
+	}
+
+	@VisibleForTesting
+	protected Thread getEventProcessingThread() {
+		return eventProcessingThread;
 	}
 
 }

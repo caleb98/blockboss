@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -75,21 +74,13 @@ public class BlockBossServerTest {
 	}
 
 	@Test
-	void init() throws InterruptedException {
+	void init() {
 		blockBoss.addModule(module);
 
 		blockBoss.init();
 
-		Set<Thread> activeThreads = Thread.getAllStackTraces().keySet();
-		var eventsThread = activeThreads.parallelStream()
-				.filter(t -> t.getName().equals("Events"))
-				.findFirst();
-
-		Thread.sleep(50);
-
 		verify(module).init(blockBoss.getMinecraftServer());
-		assertTrue(eventsThread.isPresent());
-		assertTrue(eventsThread.get().isAlive());
+		assertTrue(blockBoss.getEventProcessingThread().isAlive());
 
 		blockBoss.shutdown();
 	}
@@ -111,9 +102,11 @@ public class BlockBossServerTest {
 		blockBoss.init();
 		blockBoss.start();
 
-		Thread.sleep(50);
-
 		assertFalse(blockBoss.isShutdownRequested());
+
+		blockBoss.shutdown();
+		blockBoss.getEventProcessingThread().join();
+
 		verify(server).start();
 		verify(module).serverStarted(any(MinecraftServerProcessStartedEvent.class));
 
@@ -130,18 +123,11 @@ public class BlockBossServerTest {
 	@Test
 	void shutdown() throws InterruptedException {
 		blockBoss.init();
-
-		Set<Thread> activeThreads = Thread.getAllStackTraces().keySet();
-		var eventsThread = activeThreads.parallelStream()
-				.filter(t -> t.getName().equals("Events"))
-				.findFirst();
-
 		blockBoss.shutdown();
 
-		Thread.sleep(50);
+		blockBoss.getEventProcessingThread().join();
 
-		assertTrue(eventsThread.isPresent());
-		assertTrue(!eventsThread.get().isAlive());
+		assertTrue(!blockBoss.getEventProcessingThread().isAlive());
 	}
 
 	@Test
@@ -166,8 +152,9 @@ public class BlockBossServerTest {
 
 		blockBoss.sendEvent(message);
 		blockBoss.sendEvent(message);
+		blockBoss.shutdown();
 
-		Thread.sleep(50);
+		blockBoss.getEventProcessingThread().join();
 
 		verify(listenerRemoved, times(1)).apply(message);
 		verify(listenerRemained, times(2)).apply(message);

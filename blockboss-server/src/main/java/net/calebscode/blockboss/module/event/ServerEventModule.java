@@ -18,9 +18,9 @@ import net.calebscode.blockboss.server.BlockBossServer;
 public class ServerEventModule extends BlockBossModule {
 
 	public static final String MODULE_ID = "ServerEventModule";
-	
+
 	private ArrayList<ServerEventDefinition> eventDefinitions = new ArrayList<>();
-	
+
 	public ServerEventModule(BlockBossServer blockBoss) {
 		super(blockBoss);
 		eventDefinitions.add(new AchievementGetEventDefinition());
@@ -34,9 +34,9 @@ public class ServerEventModule extends BlockBossModule {
 
 	@Override
 	public void init() {
-		
+
 	}
-	
+
 	@Override
 	public void configure(MinecraftServer process) {
 		process.addStdoutListener(this::processEvents);
@@ -52,5 +52,5 @@ public class ServerEventModule extends BlockBossModule {
 			}
 		}
 	}
-	
+
 }

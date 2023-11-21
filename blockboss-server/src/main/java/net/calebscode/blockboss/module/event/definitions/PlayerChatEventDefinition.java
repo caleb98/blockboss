@@ -9,7 +9,7 @@ import net.calebscode.blockboss.module.event.ServerEvent;
 public class PlayerChatEventDefinition extends ServerEventDefinition {
 
 	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX + "<(\\w+)> (.*)$");
-	
+
 	@Override
 	public Pattern getPattern() {
 		return PATTERN;

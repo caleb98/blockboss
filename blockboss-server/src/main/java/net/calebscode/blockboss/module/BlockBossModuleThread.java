@@ -7,12 +7,12 @@ public class BlockBossModuleThread implements Runnable, Logging {
 
 	protected BlockBossServer blockBoss;
 	protected BlockBossModule owner;
-	
+
 	public BlockBossModuleThread(BlockBossServer blockBoss, BlockBossModule owner) {
 		this.blockBoss = blockBoss;
 		this.owner = owner;
 	}
-	
+
 	@Override
 	public void run() {
 		logger().info("Starting {}", Thread.currentThread().getName());
@@ -23,9 +23,14 @@ public class BlockBossModuleThread implements Runnable, Logging {
 		cleanup();
 		logger().info("Exiting {}", Thread.currentThread().getName());
 	}
-	
-	public void init() {}
-	public void doUpdate() {}
-	public void cleanup() {}
+
+	public void init() {
+	}
+
+	public void doUpdate() {
+	}
+
+	public void cleanup() {
+	}
 
 }

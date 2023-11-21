@@ -8,12 +8,13 @@ import net.calebscode.blockboss.module.event.ServerEvent;
 public abstract class ServerEventDefinition {
 
 	public static final String UNIVERSAL_MESSAGE_PREFIX = "^\\[(\\d\\d:\\d\\d:\\d\\d)\\] \\[Server thread\\/INFO\\]: ";
-	
+
 	public abstract Pattern getPattern();
+
 	public abstract ServerEvent getEvent(Matcher matcher);
 
 	public final Matcher match(String line) {
 		return getPattern().matcher(line);
 	}
-	
+
 }

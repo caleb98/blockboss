@@ -9,7 +9,7 @@ import net.calebscode.blockboss.module.event.WorldSavedEvent;
 public class WorldSavedEventDefinition extends ServerEventDefinition {
 
 	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX + "Saved the game$");
-	
+
 	@Override
 	public Pattern getPattern() {
 		return PATTERN;

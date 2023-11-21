@@ -8,9 +8,9 @@ import net.calebscode.blockboss.module.event.ServerEvent;
 
 public class PlayerAuthEventDefinition extends ServerEventDefinition {
 
-	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX + 
-			"UUID of player (\\w+) is ([\\dabcdef]{8}-[\\dabcdef]{4}-[\\dabcdef]{4}-[\\dabcdef]{4}-[\\dabcdef]{12})$");
-	
+	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX
+			+ "UUID of player (\\w+) is ([\\dabcdef]{8}-[\\dabcdef]{4}-[\\dabcdef]{4}-[\\dabcdef]{4}-[\\dabcdef]{12})$");
+
 	@Override
 	public Pattern getPattern() {
 		return PATTERN;

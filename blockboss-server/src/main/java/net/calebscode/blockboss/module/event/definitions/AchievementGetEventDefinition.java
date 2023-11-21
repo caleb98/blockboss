@@ -8,8 +8,9 @@ import net.calebscode.blockboss.module.event.ServerEvent;
 
 public class AchievementGetEventDefinition extends ServerEventDefinition {
 
-	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX + "(\\w+) has made the advancement \\[(.*)\\]$");
-	
+	public static final Pattern PATTERN = Pattern
+			.compile(UNIVERSAL_MESSAGE_PREFIX + "(\\w+) has made the advancement \\[(.*)\\]$");
+
 	@Override
 	public Pattern getPattern() {
 		return PATTERN;

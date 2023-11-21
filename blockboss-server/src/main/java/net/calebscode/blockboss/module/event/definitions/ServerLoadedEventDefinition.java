@@ -8,8 +8,9 @@ import net.calebscode.blockboss.module.event.ServerLoadedEvent;
 
 public class ServerLoadedEventDefinition extends ServerEventDefinition {
 
-	public static final Pattern PATTERN = Pattern.compile(UNIVERSAL_MESSAGE_PREFIX + "Done \\((\\d+\\.\\d+)s\\)! For help, type \"help\"$");
-	
+	public static final Pattern PATTERN = Pattern
+			.compile(UNIVERSAL_MESSAGE_PREFIX + "Done \\((\\d+\\.\\d+)s\\)! For help, type \"help\"$");
+
 	@Override
 	public Pattern getPattern() {
 		return PATTERN;

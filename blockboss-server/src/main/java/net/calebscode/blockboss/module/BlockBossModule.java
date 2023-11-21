@@ -17,7 +17,7 @@ public abstract class BlockBossModule implements Logging {
 	public final String getModuleId() {
 		return this.getClass().getSimpleName();
 	}
-	
+
 	/**
 	 * @return a collection of module types which this module depends on
 	 */
@@ -26,13 +26,6 @@ public abstract class BlockBossModule implements Logging {
 	/**
 	 * Initializes the module. Called once at the start of the application.
 	 */
-	public abstract void init();
-
-	/**
-	 * Configures the provided MinecraftServer object.
-	 *
-	 * @param process
-	 */
-	public abstract void configure(MinecraftServer process);
+	public abstract void init(MinecraftServer server);
 
 }

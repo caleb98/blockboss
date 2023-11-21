@@ -27,12 +27,7 @@ public class ExecModule extends BlockBossModule {
 	}
 
 	@Override
-	public void init() {
-
-	}
-
-	@Override
-	public void configure(MinecraftServer process) {
+	public void init(MinecraftServer process) {
 
 	}
 

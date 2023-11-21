@@ -38,14 +38,9 @@ public class ServerEventModule extends BlockBossModule {
 	public Collection<Class<? extends BlockBossModule>> getDependencies() {
 		return Collections.emptyList();
 	}
-	
-	@Override
-	public void init() {
-
-	}
 
 	@Override
-	public void configure(MinecraftServer process) {
+	public void init(MinecraftServer process) {
 		process.addStdoutListener(this::processEvents);
 	}
 

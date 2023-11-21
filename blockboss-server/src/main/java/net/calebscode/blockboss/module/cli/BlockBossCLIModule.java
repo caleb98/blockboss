@@ -19,17 +19,14 @@ public class BlockBossCLIModule extends BlockBossModule {
 	public Collection<Class<? extends BlockBossModule>> getDependencies() {
 		return Collections.emptyList();
 	}
-	
-	@Override
-	public void init() {
-		blockBossCLIThread = new Thread(new BlockBossCLIThread(blockBoss, this), "CLI");
-		blockBossCLIThread.start();
-	}
 
 	@Override
-	public void configure(MinecraftServer process) {
-		process.addStdoutListener(System.out::println);
-		process.addStderrListener(System.err::println);
+	public void init(MinecraftServer server) {
+		blockBossCLIThread = new Thread(new BlockBossCLIThread(blockBoss, this), "CLI");
+		blockBossCLIThread.start();
+
+		server.addStdoutListener(System.out::println);
+		server.addStderrListener(System.err::println);
 	}
 
 }

@@ -42,11 +42,7 @@ public class BlockBossServer implements Logging {
 		eventProcessingThread.start();
 
 		for (var module : modules.values()) {
-			module.init();
-		}
-
-		for (var module : modules.values()) {
-			module.configure(minecraftServer);
+			module.init(minecraftServer);
 		}
 	}
 

@@ -12,8 +12,8 @@ import net.calebscode.blockboss.module.event.definitions.PlayerLeftEventDefiniti
 import net.calebscode.blockboss.module.event.definitions.ServerEventDefinition;
 import net.calebscode.blockboss.module.event.definitions.ServerLoadedEventDefinition;
 import net.calebscode.blockboss.module.event.definitions.WorldSavedEventDefinition;
+import net.calebscode.blockboss.process.MinecraftServer;
 import net.calebscode.blockboss.server.BlockBossServer;
-import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public class ServerEventModule extends BlockBossModule {
 

@@ -1,8 +1,8 @@
 package net.calebscode.blockboss.module;
 
 import net.calebscode.blockboss.logging.Logging;
+import net.calebscode.blockboss.process.MinecraftServer;
 import net.calebscode.blockboss.server.BlockBossServer;
-import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public abstract class BlockBossModule implements Logging {
 

@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.calebscode.blockboss.logging.Logging;
 import net.calebscode.blockboss.module.BlockBossModule;
+import net.calebscode.blockboss.process.MinecraftServer;
 import net.calebscode.blockboss.server.event.EventBus;
 import net.calebscode.blockboss.server.event.MinecraftServerProcessStartedEvent;
-import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public class BlockBossServer implements Logging {
 
@@ -22,8 +22,8 @@ public class BlockBossServer implements Logging {
 	private EventBus eventBus = new EventBus();
 	private Queue<Object> pendingEvents = new ConcurrentLinkedQueue<>();
 
-	public BlockBossServer(String serverDirectory, String... serverCommand) {
-		minecraftServer = new MinecraftServer(new File(serverDirectory), serverCommand);
+	public BlockBossServer(File serverJar) {
+		minecraftServer = new MinecraftServer(serverJar);
 	}
 
 	public boolean addModule(BlockBossModule module) {

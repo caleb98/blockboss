@@ -2,9 +2,9 @@ package net.calebscode.blockboss.module.cli;
 
 import net.calebscode.blockboss.module.BlockBossModule;
 import net.calebscode.blockboss.module.event.PlayerJoinedEvent;
+import net.calebscode.blockboss.process.MinecraftServer;
 import net.calebscode.blockboss.server.BlockBossServer;
 import net.calebscode.blockboss.server.event.Subscribe;
-import net.calebscode.blockboss.server.process.MinecraftServer;
 
 public class BlockBossCLIModule extends BlockBossModule {
 

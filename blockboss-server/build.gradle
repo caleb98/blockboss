@@ -1,11 +1,11 @@
 plugins {
- 	id 'net.calebscode.blockboss.java-application-conventions'
+	id 'net.calebscode.blockboss.java-application-conventions'
 }
 
 dependencies {
- 	implementation project(":blockboss-lib")
+	implementation project(":blockboss-lib")
 }
 
 application {
- 	mainClass = 'net.calebscode.blockboss.server.ServerMain'
+	mainClass = 'net.calebscode.blockboss.server.ServerMain'
 }
